@@ -2,7 +2,7 @@ const { defineConfig } = require('cypress')
 
 module.exports = defineConfig({
   env: {
-    apiUrl: 'http://host.docker.internal:8080',
+    apiUrl: 'null',
   },
   e2e: {
     setupNodeEvents(on, config) {},
