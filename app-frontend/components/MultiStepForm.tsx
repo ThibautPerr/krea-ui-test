@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { object, string, number } from 'yup';
 import Step from "./Step";
+import 'semantic-ui-css/semantic.min.css';
 
 type FormData = {
     firstName: string;
@@ -65,7 +66,7 @@ const MultiStepForm = () => {
             case 1:
                 return (
                     <>
-                        <h2>Step {step}</h2>
+                        <h2 className='ui header'>Step {step}</h2>
                         <Step
                             step={step}
                             fields={["firstName", "lastName", "age"]}
@@ -79,7 +80,7 @@ const MultiStepForm = () => {
             case 2:
                 return (
                     <>
-                        <h2>Step {step}</h2>
+                        <h2 className='ui header'>Step {step}</h2>
                         <Step
                             step={step}
                             fields={["email", "phone"]}
@@ -93,7 +94,7 @@ const MultiStepForm = () => {
             case 3:
                 return (
                     <>
-                        <h2>Step {step}</h2>
+                        <h2 className='ui header'>Step {step}</h2>
                         <Step
                             step={step}
                             fields={["seat", "food", "allergies"]}
@@ -107,29 +108,54 @@ const MultiStepForm = () => {
             case displayStep:
                 return (
                     <>
-                        <h2>Step {step}</h2>
-                        <div>
-                            <h3>Please check that every information below are correct</h3>
-                            <div data-testid="firstName">First Name: {formData['firstName']}</div>
-                            <div data-testid="lastName">Last Name: {formData['lastName']}</div>
-                            <div data-testid="age">Age: {formData['age']}</div>
-                            <div data-testid="email">Email: {formData['email']}</div>
-                            <div data-testid="phone">Phone: {formData['phone']}</div>
-                            <div data-testid="seat">Seat: {formData['seat']}</div>
-                            <div data-testid="food">Food: {formData['food']}</div>
-                            <div data-testid="allergies">Allergies: {formData['allergies']}</div>
+                        <h2 className='ui header'>Step {step}</h2>
+                        <h3>Please check that every information below are correct</h3>
+                        <div className='ui two column padded grid centered' style={{ fontSize: "1.2rem" }}>
+                            <div className='row middle aligned'>
+                                <div className='column right aligned'>First Name : </div>
+                                <div className='column' data-testid="firstName">{formData['firstName']}</div>
+                            </div>
+
+                            <div className='row middle aligned'>
+                                <div className='column right aligned'>Last Name : </div>
+                                <div className='column' data-testid="lastName">{formData['lastName']}</div>
+                            </div>
+                            <div className='row'>
+                                <div className='column right aligned'>Age : </div>
+                                <div className='column' data-testid="age">{formData['age']}</div>
+                            </div>
+                            <div className='row'>
+                                <div className='column right aligned'>Email : </div>
+                                <div className='column' data-testid="email">{formData['email']}</div>
+                            </div>
+                            <div className='row'>
+                                <div className='column right aligned'>Phone : </div>
+                                <div className='column' data-testid="phone">{formData['phone']}</div>
+                            </div>
+                            <div className='row'>
+                                <div className='column right aligned'>Seat : </div>
+                                <div className='column' data-testid="seat">{formData['seat']}</div>
+                            </div>
+                            <div className='row'>
+                                <div className='column right aligned'>Food : </div>
+                                <div className='column' data-testid="food">{formData['food']}</div>
+                            </div>
+                            <div className='row'>
+                                <div className='column right aligned'>Allergies : </div>
+                                <div className='column' data-testid="allergies">{formData['allergies']}</div>
+                            </div>
                         </div>
-                        <button type="button" data-testid="back" onClick={prevStep}>
-                            Previous
-                        </button>
-                        <button type="submit" onClick={nextStep}>Submit</button>
+                        <button type="button" data-testid="back" onClick={prevStep} className="ui button" >
+                                Previous
+                            </button>
+                        <button type="submit" onClick={nextStep} className="ui primary button" >Submit</button>
                     </>
                 );
             case displayStep + 1:
                 return (
                     <>
                         <h2>Thank you for your submission!</h2>
-                        <button type="button" onClick={() => setStep(1)}>
+                        <button type="button" onClick={() => setStep(1)} className="ui button" >
                             Reset
                         </button>
                     </>
