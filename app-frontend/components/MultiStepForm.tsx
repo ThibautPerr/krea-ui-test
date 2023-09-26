@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
 import { object, string, number } from 'yup';
 import Step from "./Step";
 
@@ -37,23 +35,29 @@ const formSchema = object().shape({
 
 const MultiStepForm = () => {
     const [step, setStep] = useState(1);
+    const [formData, setFormData] = useState<FormData>({
+        firstName: '',
+        lastName: '',
+        age: 0,
+        email: '',
+        phone: '',
+        seat: '',
+        food: '',
+        allergies: '',
+    });
     const displayStep = 4;
 
-    const {
-        handleSubmit,
-        register,
-        formState: { errors },
-        watch,
-    } = useForm<FormData>({
-        resolver: yupResolver(formSchema),
-    });
-
-    const onSubmit = (data) => {
-        console.log('Form data:', data);
+    const onSubmit = (stepData) => {
+        setFormData({ ...formData, ...stepData });
+        nextStep();
     };
 
     const prevStep = () => {
         setStep(step - 1);
+    };
+
+    const nextStep = () => {
+        setStep(step + 1);
     };
 
     const renderStep = () => {
@@ -61,14 +65,12 @@ const MultiStepForm = () => {
             case 1:
                 return (
                     <>
-                        <h2>Step 1</h2>
+                        <h2>Step {step}</h2>
                         <Step
                             step={step}
                             fields={["firstName", "lastName", "age"]}
                             fieldLabels={["First Name", "Last Name", "Age"]}
-                            handleSubmit={handleSubmit}
-                            register={register}
-                            errors={errors}
+                            globalSchema={formSchema}
                             onSubmit={onSubmit}
                             prevStep={prevStep}
                         />
@@ -77,14 +79,12 @@ const MultiStepForm = () => {
             case 2:
                 return (
                     <>
-                        <h2>Step 2</h2>
+                        <h2>Step {step}</h2>
                         <Step
                             step={step}
                             fields={["email", "phone"]}
                             fieldLabels={["Email", "Phone"]}
-                            handleSubmit={handleSubmit}
-                            register={register}
-                            errors={errors}
+                            globalSchema={formSchema}
                             onSubmit={onSubmit}
                             prevStep={prevStep}
                         />
@@ -93,14 +93,12 @@ const MultiStepForm = () => {
             case 3:
                 return (
                     <>
-                        <h2>Step 3</h2>
+                        <h2>Step {step}</h2>
                         <Step
                             step={step}
                             fields={["seat", "food", "allergies"]}
                             fieldLabels={["Seat", "Food", "Allergies"]}
-                            handleSubmit={handleSubmit}
-                            register={register}
-                            errors={errors}
+                            globalSchema={formSchema}
                             onSubmit={onSubmit}
                             prevStep={prevStep}
                         />
@@ -109,22 +107,22 @@ const MultiStepForm = () => {
             case displayStep:
                 return (
                     <>
-                        <h2>Step {displayStep}</h2>
+                        <h2>Step {step}</h2>
                         <div>
                             <h3>Please check that every information below are correct</h3>
-                            <div data-testid="firstName">First Name: {watch('firstName')}</div>
-                            <div data-testid="lastName">Last Name: {watch('lastName')}</div>
-                            <div data-testid="age">Age: {watch('age')}</div>
-                            <div data-testid="email">Email: {watch('email')}</div>
-                            <div data-testid="phone">Phone: {watch('phone')}</div>
-                            <div data-testid="seat">Seat: {watch('seat')}</div>
-                            <div data-testid="food">Food: {watch('food')}</div>
-                            <div data-testid="allergies">Allergies: {watch('allergies')}</div>
+                            <div data-testid="firstName">First Name: {formData['firstName']}</div>
+                            <div data-testid="lastName">Last Name: {formData['lastName']}</div>
+                            <div data-testid="age">Age: {formData['age']}</div>
+                            <div data-testid="email">Email: {formData['email']}</div>
+                            <div data-testid="phone">Phone: {formData['phone']}</div>
+                            <div data-testid="seat">Seat: {formData['seat']}</div>
+                            <div data-testid="food">Food: {formData['food']}</div>
+                            <div data-testid="allergies">Allergies: {formData['allergies']}</div>
                         </div>
                         <button type="button" data-testid="back" onClick={prevStep}>
                             Previous
                         </button>
-                        <button type="submit">Submit</button>
+                        <button type="submit" onClick={nextStep}>Submit</button>
                     </>
                 );
             case displayStep + 1:
@@ -141,7 +139,9 @@ const MultiStepForm = () => {
         }
     };
 
-    return <div>{renderStep()}</div>;
+    return (
+        <div>{renderStep()}</div>
+    );
 };
 
 export default MultiStepForm;

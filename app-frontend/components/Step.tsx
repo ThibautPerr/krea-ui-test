@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 type StepProps = {
     step: number;
     fields: string[];
     fieldLabels: string[];
-    handleSubmit: any;
-    register: any;
-    errors: any;
-    onSubmit: (data: any) => void;
+    globalSchema: any,
+    onSubmit: (stepData: any) => void;
     prevStep: () => void;
 };
 
@@ -15,21 +15,27 @@ const Step: React.FC<StepProps> = ({
     step,
     fields,
     fieldLabels,
-    handleSubmit,
-    register,
-    errors,
+    globalSchema,
     onSubmit,
     prevStep,
 }) => {
 
+    const { register, handleSubmit, formState: { errors } } = useForm({
+        resolver: yupResolver(globalSchema.pick(fields)),
+    });
+
+    const handleFormSubmit = (data) => {
+        onSubmit(data); // Pass the form data to the parent component
+    };
+
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(handleFormSubmit)}>
             {fields.map((field, index) => (
-                <div>
+                <>
                     <label>{fieldLabels[index]}</label>
                     <input {...register(field)} data-testid={field} />
                     <p>{errors[field]?.message}</p>
-                </div>
+                </>
             ))}
             {step > 1 &&
                 <button type="button" data-testid="back" onClick={prevStep}>
